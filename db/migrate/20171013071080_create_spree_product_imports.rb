@@ -1,4 +1,4 @@
-class CreateProductImports < SpreeExtension::Migration[7.0]
+class CreateSpreeProductImports < SpreeExtension::Migration[7.0]
     def change
         create_table :spree_product_imports do |t|
 

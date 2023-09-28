@@ -2,8 +2,12 @@ module Spree
     module Admin
       class ProductImportsController < ResourceController
         before_action :load_data
-        before_action :set_product_import, only: %i[ show edit update destroy ]
+        before_action :set_product_import, only: %i[ index show edit update destroy ]
   
+        def index
+            @product_imports = ProductImport.all
+        end
+          
         # GET /incases/new
         def new
             @product_import = ProductImport.new
