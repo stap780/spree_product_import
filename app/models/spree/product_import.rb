@@ -4,7 +4,8 @@ module Spree
         validates :store, presence: true
     
         scope :active, -> { where(active: true) }
-        has_many :product_import_columns
+        has_many :product_import_columns, dependent: :destroy
+        accepts_nested_attributes_for :product_import_columns, allow_destroy: true
         belongs_to :store
     
         def self.import_attributes
