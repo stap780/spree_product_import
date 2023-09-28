@@ -9,9 +9,9 @@ module SpreeProductImport
       g.test_framework :rspec
     end
 
-    initializer 'spree_product_import.environment', before: :load_config_initializers do |_app|
-      SpreeProductImport::Config = SpreeProductImport::Configuration.new
-    end
+    # initializer 'spree_product_import.environment', before: :load_config_initializers do |_app|
+    #   SpreeProductImport::Config = SpreeProductImport::Configuration.new
+    # end
 
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/**/*_decorator*.rb')) do |c|
