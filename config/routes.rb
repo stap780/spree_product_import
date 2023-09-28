@@ -1,3 +1,13 @@
 Spree::Core::Engine.add_routes do
-  # Add your extension routes here
+  namespace :admin, path: Spree.admin_path do
+    resources :product_imports do
+      collection do
+        # get :file_import  - because we have new action
+        post :import_setup
+        post :convert_file_data
+      end
+    end
+  
+    resources :product_import_columns
+  end
 end

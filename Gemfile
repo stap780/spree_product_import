@@ -9,4 +9,10 @@ gem 'spree', github: 'spree/spree', branch: 'main'
 # gem 'spree_backend', github: 'spree/spree', branch: 'main'
 gem 'rails-controller-testing'
 
+gem 'caxlsx'
+gem 'caxlsx_rails'
+gem 'roo'
+gem 'roo-xls'
+
+
 gemspec

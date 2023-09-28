@@ -1,0 +1,49 @@
+<%= form_tag convert_file_data_product_imports_path, method: :post, data: { turbo: false } do %>
+  <div class="row">
+      <div class="col-md-12">
+          <div class="card">
+            <div class="card-header py-3 px-3 border-bottom">
+              <div class="h4">Сопоставление данных из файла с полями в программе</div>
+            </div>
+            <div class="card-body">
+              <div class="col-md-12 select-table-wrap">
+                <div class="row mb-4">
+                    <div class="col-3"><b>Системные поля</b></div>
+                    <div class="col-5"><b>Поля из файла</b></div>
+                </div>
+                <% @our_fields.each do |our_field|%>
+                  <% our_field.each do |key, value|%>
+                    <div class="h5 my-4"><%= key.classify.safe_constantize.model_name.human(count: 2) %></div>
+                    <% value.each do |of| %>
+                      <div class="row mb-1">
+                          <div class="col-3">
+                              <% label_name = of == 'unumber' || of == 'date' ? t("helpers.label.#{key}.#{of}")+" (*обязательно)" : t("helpers.label.#{key}.#{of}") %>
+                              <%= label_tag "#{of}", label_name %>
+                          </div>
+                          <div class="col-5">
+                              <%= select_tag "update_rules[][#{of}]", options_for_select(@header, get_selected_value(of) ), include_blank: true, label: false, class: "form-select" %>
+                          </div>
+                      </div>
+                      <%end%>
+                  <% end %>
+                <% end %>
+              </div>
+              <div class="col-md-12 file-data-for-next-step">
+                <% @file_data.each do |file_data|%>
+                  <%#` file_data.to_s %>
+                  <% file_data.each do |k,v|%>
+                    <%=hidden_field_tag "lines[][#{k}]", v %>
+                  <%end%>
+                <%end%>  
+              </div>
+            
+            </div>
+            <div class="card-footer">
+              <%= submit_tag "Далее", class: "btn btn-success" %>
+              <%= link_to 'Назад', :back, class: 'btn btn-outline-primary'  %>
+            </div>
+        </div>
+      </div>
+  </div>
+
+<% end %>

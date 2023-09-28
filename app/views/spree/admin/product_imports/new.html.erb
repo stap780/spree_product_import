@@ -1,0 +1,11 @@
+<%= form_tag import_setup_product_imports_path, multipart: true, data: { turbo: false } do %>
+    <div class="mt-2 mb-2"><b>ВНИМАНИЕ</b> для импорта подходят файлы (Excel 2000/97 .xls) или csv (разделитель "запятая", кодировка "utf-8")</div>
+        <p class="mt-5"></p>
+        <%= file_field_tag :file, :class =>'import_file'%>
+        <p class="mt-5"></p>
+        <p class="mb-5"></p>	
+        <%= submit_tag "Импорт", class: "btn btn-primary" %>
+    </div>
+    <div class="modal-footer">
+    </div>
+<% end %>
