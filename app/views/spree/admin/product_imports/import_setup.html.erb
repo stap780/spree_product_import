@@ -13,7 +13,7 @@
                 </div>
                 <% @our_fields.each do |our_field|%>
                   <% our_field.each do |key, value|%>
-                    <div class="h5 my-4"><%= key.classify.safe_constantize.model_name.human(count: 2) %></div>
+                    <div class="h5 my-4"><%= key %></div>
                     <% value.each do |of| %>
                       <div class="row mb-1">
                           <div class="col-3">
@@ -39,8 +39,17 @@
             
             </div>
             <div class="card-footer">
-              <%= submit_tag "Далее", class: "btn btn-success" %>
-              <%= link_to 'Назад', :back, class: 'btn btn-outline-primary'  %>
+              <%# submit_tag "Далее", class: "btn btn-success" %>
+              <%# link_to 'Назад', :back, class: 'btn btn-outline-primary'  %>
+    
+              <div class="form-actions" data-hook="buttons">
+                  <%# button Spree.t('actions.update'), 'save.svg', 'submit', {class: 'btn-success', data: { disable_with: "#{ Spree.t(:saving) }..." }} %>
+                  <%= submit_tag "Далее", class: "btn btn-success" %>
+              <span class="or"><%= Spree.t(:or) %></span>
+                  <%= button_link_to Spree.t('actions.cancel'), collection_url, icon: 'cancel.svg' %>
+              </div>
+
+
             </div>
         </div>
       </div>
