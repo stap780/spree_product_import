@@ -4,7 +4,7 @@ module Spree
         before_action :load_data
         before_action :set_product_import, only: %i[ index show edit update destroy ]
   
-        def index
+        def index_all
             @product_imports = ProductImport.all
         end
           
@@ -17,11 +17,10 @@ module Spree
             service = ProductImportService::Import.new(params[:file])
         
             import_data = service.collect_data
-            #puts 'incase_import_data => '+incase_import_data.to_s
             if import_data
               @header = import_data[:header]
               @file_data = import_data[:file_data]
-              @our_fields = Incase.import_attributes
+              @our_fields = ProductImport.import_attributes
               render 'import_setup'
             else
               flash[:alert] = 'Ошибка в файле импорта'
@@ -42,7 +41,7 @@ module Spree
           @stores = Spree::Store.all
         end
 
-        def set_incase
+        def set_product_import
             @product_import = ProductImport.find(params[:id])
         end
       

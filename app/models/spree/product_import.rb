@@ -10,21 +10,27 @@ module Spree
     
         def self.import_attributes
             our_fields = []
-            products = []
-            variants = []
-            Spree::Product.attribute_names.each do |fi| 
-                # fi = 'company' if fi == 'company_id' # fi = 'strah' if fi == 'strah_id'
-                products.push(fi) if fi != 'id' && fi != 'created_at' && fi != 'updated_at'
-            end
+            not_use_product_attr = ["id","available_on","deleted_at","slug","tax_category_id","shipping_category_id","created_at","updated_at", 
+                                    "promotionable", "discontinue_on","public_metadata","private_metadata","status","make_active_at",
+                                    "unique_identifier","unique_identifier_type","feed_active","preferences"]
+            not_use_variant_attr = ["id","weight","height","width","depth","deleted_at","is_master","product_id","position",
+                                    "track_inventory","tax_category_id","updated_at","discontinue_on","created_at","public_metadata",
+                                    "private_metadata","unique_identifier","unique_identifier_type","show_in_product_feed","preferences"]
+            not_use_taxonomy_attr = ["id", "created_at", "updated_at", "position", "store_id", "public_metadata", "private_metadata", "preferences"] 
+            products = Spree::Product.attribute_names.map{|fi| fi if !not_use_product_attr.include?(fi)}
             product_hash = Hash.new
             product_hash['product'] = products.reject(&:blank?)
             our_fields.push(product_hash)
-            Spree::Variant.attribute_names.each do |fi|
-                variants.push(fi) if fi != 'id' && fi != 'created_at' && fi != 'updated_at'
-            end
+            
+            variants = Spree::Variant.attribute_names.map{|fi| fi if !not_use_variant_attr.include?(fi)}
             variant_hash = Hash.new
             variant_hash['variant'] = variants.reject(&:blank?)
             our_fields.push(variant_hash)
+
+            collections = Spree::Taxonomy.attribute_names.map{|fi| fi if !not_use_variant_attr.include?(fi)}
+            collection_hash = Hash.new
+            collection_hash['collection'] = collections.reject(&:blank?)
+
             #puts our_fields.to_s
             our_fields
         end
