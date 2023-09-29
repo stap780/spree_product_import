@@ -1,5 +1,6 @@
 Spree::Core::Engine.add_routes do
   namespace :admin, path: Spree.admin_path do
+    
     get 'product_imports', to: 'product_imports#index_all'
     resources :product_imports do
       collection do
@@ -9,5 +10,11 @@ Spree::Core::Engine.add_routes do
       end
     end
     resources :product_import_columns
+    resource :products do
+      collection do
+        post :bulk_delete
+      end
+    end
+
   end
 end

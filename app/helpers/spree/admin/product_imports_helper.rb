@@ -8,6 +8,7 @@ module Spree
                 selected_value
             end
 
+
         end
     end
 end
