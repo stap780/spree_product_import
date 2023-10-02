@@ -10,7 +10,7 @@
     <div class="form-actions" data-hook="buttons">
         <%# button Spree.t('actions.update'), 'save.svg', 'submit', {class: 'btn-success', data: { disable_with: "#{ Spree.t(:saving) }..." }} %>
         <%= submit_tag "Импорт", class: "btn btn-success" %>
-    <span class="or"><%= Spree.t(:or) %></span>
+        <span class="or"><%= Spree.t(:or) %></span>
         <%= button_link_to Spree.t('actions.cancel'), collection_url, icon: 'cancel.svg' %>
     </div>
 <% end %>
