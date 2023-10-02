@@ -1,4 +1,4 @@
-class AddColimnsToSpreeProductImports < SpreeExtension::Migration[7.0]
+class AddColumnsToSpreeProductImports < SpreeExtension::Migration[7.0]
     def change
       add_column :spree_product_imports, :uniq_field, :string
       add_column :spree_product_imports, :update_title, :boolean
