@@ -6,6 +6,7 @@ Spree::Core::Engine.add_routes do
       collection do
         # get :file_import  - because we have new action
         post :import_setup
+        get '/:id/import_start', action: 'import_start', as: 'import_start'
         post :convert_file_data
       end
     end

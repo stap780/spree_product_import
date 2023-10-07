@@ -1,0 +1,7 @@
+<p>Please start import process or cancel</p>
+<div class="form-actions" data-hook="buttons">
+    <%= link_to "Start import",import_start_admin_product_imports_path(@product_import) , class: "btn btn-success", id: "import_start_button", remote: true %>
+    <span class="or"><%= Spree.t(:or) %></span>
+    <%= button_link_to Spree.t('actions.cancel'), collection_url, icon: 'cancel.svg' %>
+</div>
+<div class="import_start_status" id="import_start_status"></div>

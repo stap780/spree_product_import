@@ -6,6 +6,14 @@ class CreateSpreeProductImports < SpreeExtension::Migration[7.0]
           t.string :title
           t.string :report
           t.string :file
+          t.string :strategy
+          t.string :uniq_field
+          t.boolean :update_title, default: true, index: true
+          t.boolean :update_desc, default: true, index: true
+          t.boolean :update_img, default: true, index: true
+          t.boolean :update_quantity, default: true, index: true
+          t.boolean :update_price, default: true, index: true
+
           t.timestamps
           
         end

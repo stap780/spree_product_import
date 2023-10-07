@@ -1,74 +1,65 @@
-<% content_for :page_actions do %>
-  <%= external_page_preview_link(@product_import) %>
-<% end %>
+<div class="container">
 
+<%= form_for [:admin, @product_import], html: { multipart: true } , data: { turbo: false } do |f| %>
 <%= render partial: 'spree/admin/shared/error_messages', locals: { target: @product_import } %>
-<fieldset>
-<p>We create new product if not found by Uniq field. We update product if found by Uniq field</p>
-</fieldset>
-<%= form_for [:admin, @product_import], method: :put, html: { multipart: true } do |f| %>
   <fieldset>
     <div class="row">
-      <div class="form-group checkbox">
+      <div class="col-3 form-group checkbox">
         <%= label_tag :active do %>
           <%= f.check_box :active %>
           <%= Spree.t(:active) %>
         <% end %>
       </div>
-      <div data-hook="admin_product_uniq_field">
+      <div class="col-3" data-hook="admin_product_uniq_field">
         <%= f.field_container :uniq_field do %>
           <%= f.label :uniq_field, Spree.t(:uniq_field) %>
-          <%= collection_select(:product_import, :uniq_field, @uniq_fields, :id, :unique_name, {}, { multiple: false, class: '' }) %>
+          <%= f.select :uniq_field,  ['variant_id','name','sku'], {}, { class: "form-control" }%>
         <% end %>
       </div>
     </div>
     <div class="row mb-4">
-        <div class="col-3"><b>System fields</b></div>
-        <div class="col-5"><b>Columns from file</b></div>
+        <div class="col-3"><b>Columns from file</b></div>
+        <div class="col-5"><b>System fields</b></div>
     </div>
     <div class="row mb-4">
         <%= f.fields_for :product_import_columns do |ff| %>
-          <% @header.each do |of| %> 
-            <div class="row mb-1">
+            <div class="row col-12 mb-1">
                 <div class="col-3">
-                  <% sys_val = ff.object.present? ? ff.object.column_file : of %>
-                  <%= ff.hidden_field :column_file, value: sys_val %>
-                  <% label_name = of == 'title' || of == 'id' ? t("helpers.label.#{key}.#{of}")+" (*required)" : t("helpers.label.#{key}.#{of}") %>
-                  <%= label_tag "#{of}", label_name %>
+                  <%= ff.hidden_field :column_file %>
+                  <%= label_tag "#{ff.object.column_file}", ff.object.column_file %>
                 </div>
                 <div class="col-5">
-                  <%= ff.select :column_system, @our_fields, {}, { class: "form-select" }%>
+                  <%= ff.select :column_system, grouped_options_for_select(Spree::ProductImport.import_attributes, ff.object.column_system), {include_blank: true}, { class: "form-control" }%>
                 </div>
             </div>
-          <% end %>
         <%end%>
     </div>
     <div class="row">
-      <div class="form-group checkbox">
+      <div class="form-group form-check">
         <%= label_tag :update_title do %>
           <%= f.check_box :update_title %>
           <%= Spree.t(:update_title) %>
         <% end %>
       </div>
-      <div class="form-group checkbox">
+      <div class="form-group form-check">
         <%= label_tag :update_desc do %>
           <%= f.check_box :update_desc %>
           <%= Spree.t(:update_desc) %>
         <% end %>
       </div>
-      <div class="form-group checkbox">
+      <div class="form-group form-check">
         <%= label_tag :update_img do %>
           <%= f.check_box :update_img %>
           <%= Spree.t(:update_img) %>
         <% end %>
       </div>
-      <div class="form-group checkbox">
+      <div class="form-group form-check">
         <%= label_tag :update_quantity do %>
           <%= f.check_box :update_quantity %>
           <%= Spree.t(:update_quantity) %>
         <% end %>
       </div>
-      <div class="form-group checkbox">
+      <div class="form-group form-check">
         <%= label_tag :update_price do %>
           <%= f.check_box :update_price %>
           <%= Spree.t(:update_price) %>
@@ -78,3 +69,4 @@
     <%= render partial: 'spree/admin/shared/edit_resource_links' %>
   </fieldset>
 <% end %>
+</div>
