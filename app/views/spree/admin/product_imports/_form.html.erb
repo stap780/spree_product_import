@@ -10,6 +10,12 @@
           <%= Spree.t(:active) %>
         <% end %>
       </div>
+      <div class="col-3" data-hook="admin_product_strategy">
+        <%= f.field_container :strategy do %>
+          <%= f.label :strategy, Spree.t(:strategy) %>
+          <%= f.select :strategy,  [['product','Only product'],['product_variant','Product with variants'], {}, { class: "form-control" }%>
+        <% end %>
+      </div>
       <div class="col-3" data-hook="admin_product_uniq_field">
         <%= f.field_container :uniq_field do %>
           <%= f.label :uniq_field, Spree.t(:uniq_field) %>
