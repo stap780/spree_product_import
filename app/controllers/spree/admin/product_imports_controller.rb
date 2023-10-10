@@ -81,6 +81,10 @@ module Spree
       # PATCH/PUT /products/1
       def update
         success, message = validate_params
+        puts "###########"
+        puts "success"
+        puts success
+        puts "###########"
         if success
           respond_to do |format|
             if @product_import.update(product_import_params)
@@ -133,41 +137,35 @@ module Spree
       end
 
       def validate_params
-        puts "###########"
         status = []
         message = []
+        uniq_field = params[:product_import][:uniq_field]
         if params[:product_import][:strategy] == "product"
+          puts "strategy: product // "
+          message.push('strategy: product //')
           system = params[:product_import][:product_import_columns_attributes].values.map{|c| c['column_system']}.reject(&:blank?)
           puts "system => "+system.to_s
-          status.push( system.include?('product#name') || system.include?('product#sku') ? true : false )
-          message.push( system.include?('product#name') || system.include?('product#sku') ? '' : 'Need product name or sku' )
+          status.push( system.include?(uniq_field) ? true : false )
+          message.push( system.include?(uniq_field) ? '' : 'Need set uniq_field column' )
+          status.push( system.include?('product#name') ? true : false )
+          message.push( system.include?('product#name') ? '' : 'Need product name' )
           status.push( system.include?('product#price') ? true : false )
           message.push( system.include?('product#price') ? '' : 'Need set price' )
-
-          # status.push( system.include?(params[:product_import][:uniq_field]) ? true : false )
-          # message.push( system.include?('product#name') ? '' : 'Need product name' )
-          puts "###########"
-          # puts status.to_s
-          check_status = status.uniq == [true] ? true : false
-          # puts check_status.to_s
-          [check_status, message.join(' ')]
         end
         if params[:product_import][:strategy] == "product_variant"
+          puts "strategy: product_variant // "
+          message.push('strategy: product_variant //')
           system = params[:product_import][:product_import_columns_attributes].values.map{|c| c['column_system']}.reject(&:blank?)
           puts "system product_variant => "+system.to_s
-          status.push( system.include?('product#name') || system.include?('variant#id') || system.include?('variant#sku') ? true : false )
-          message.push( system.include?('product#name') || system.include?('variant#id') || system.include?('variant#sku') ? '' : 'Need set product name or variant uniq id or sku' )
+          status.push( system.include?(uniq_field) ? true : false )
+          message.push( system.include?(uniq_field) ? '' : 'Need set uniq_field column' )
+          status.push( system.include?('product#name') ? true : false )
+          message.push( system.include?('product#name') ? '' : 'Need set product name' )
           status.push( system.include?('variant#price') ? true : false )
           message.push( system.include?('variant#price') ? '' : 'Need set variant price' )
-  
-          # status.push( system.include?(params[:product_import][:uniq_field]) ? true : false )
-          # message.push( system.include?('product#name') ? '' : 'Need product name' )
-          puts "###########"
-          # puts status.to_s
-          check_status = status.uniq == [true] ? true : false
-          # puts check_status.to_s
-          [check_status, message.join(' ')]  
         end
+        check_status = status.uniq.to_s == "[true]" ? true : false
+        [check_status, message.join(' ')]
       end
 
     end
