@@ -139,8 +139,8 @@ module Spree
         if params[:product_import][:strategy] == "product"
           system = params[:product_import][:product_import_columns_attributes].values.map{|c| c['column_system']}.reject(&:blank?)
           puts "system => "+system.to_s
-          status.push( system.include?('product#name') ? true : false )
-          message.push( system.include?('product#name') ? '' : 'Need product name' )
+          status.push( system.include?('product#name') || system.include?('product#sku') ? true : false )
+          message.push( system.include?('product#name') || system.include?('product#sku') ? '' : 'Need product name or sku' )
           status.push( system.include?('product#price') ? true : false )
           message.push( system.include?('product#price') ? '' : 'Need set price' )
 
@@ -155,12 +155,10 @@ module Spree
         if params[:product_import][:strategy] == "product_variant"
           system = params[:product_import][:product_import_columns_attributes].values.map{|c| c['column_system']}.reject(&:blank?)
           puts "system product_variant => "+system.to_s
-          status.push( system.include?('product#name') ? true : false )
-          message.push( system.include?('product#name') ? '' : 'Need product name' )
+          status.push( system.include?('product#name') || system.include?('variant#id') || system.include?('variant#sku') ? true : false )
+          message.push( system.include?('product#name') || system.include?('variant#id') || system.include?('variant#sku') ? '' : 'Need set product name or variant uniq id or sku' )
           status.push( system.include?('variant#price') ? true : false )
           message.push( system.include?('variant#price') ? '' : 'Need set variant price' )
-          status.push( system.include?('variant#id') || system.include?('variant#sku') ? true : false )
-          message.push( system.include?('variant#id') || system.include?('variant#sku') ? '' : 'Need set variant uniq id or sku' )
   
           # status.push( system.include?(params[:product_import][:uniq_field]) ? true : false )
           # message.push( system.include?('product#name') ? '' : 'Need product name' )
