@@ -103,9 +103,6 @@ module Spree
                     variant = Spree::Variant.find(line[file_uniq_column].to_i) if @product_import.uniq_field == 'variant#id'
                     variant = Spree::Variant.find_by_sku(line[file_uniq_column]) if @product_import.uniq_field == 'variant#sku'
                     product = variant.present? ? variant.product : Spree::Product.where(name: line[file_uniq_column] ).take
-                    puts "##############"
-                    puts "variant id => "+variant.id.to_s
-                    puts "##############"
                     create_update_variant(  option_type_data,
                                             variant,
                                             product,
