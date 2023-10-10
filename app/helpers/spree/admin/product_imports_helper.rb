@@ -8,6 +8,9 @@ module Spree
                 selected_value
             end
 
+            def file_link(object)
+                Rails.application.routes.url_helpers.url_for(object)
+            end
 
         end
     end

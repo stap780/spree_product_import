@@ -1,0 +1,5 @@
+Name,Desc,Price,Color,NewColor,Images,Quantity
+Test option 1,desc test option 1,120,white,new white,https://static.insales-cdn.com/images/products/1/6653/469473789/0000000609616__1_.jpeg https://static.insales-cdn.com/images/products/1/6658/469473794/0000000609616__13_.jpeg,2
+Test option 1,desc test option 1,130,black,new black,https://static.insales-cdn.com/images/products/1/6653/469473789/0000000609616__1_.jpeg https://static.insales-cdn.com/images/products/1/6658/469473794/0000000609616__13_.jpeg,3
+Test option2,desc test option 2,360,yellow,new yellow,https://static.insales-cdn.com/images/products/1/3979/592949131/DSCN7267.JPG https://static.insales-cdn.com/images/products/1/3989/592949141/DSCN7270.JPG,4
+Test option2,desc test option 2,460,green,new green,https://static.insales-cdn.com/images/products/1/3979/592949131/DSCN7267.JPG https://static.insales-cdn.com/images/products/1/3989/592949141/DSCN7270.JPG,5

@@ -22,11 +22,12 @@
         <tr id="<%= spree_dom_id product_import %>" data-hook="admin_product_imports_index_rows">
           <td><%= product_import.title %></td>
           <td><%= product_import.report %></td>
-          <td><%= product_import.file %></td>
+          <td><%= link_to 'download', file_link(product_import.import_file)  if product_import.import_file.attached? %></td>
           <td class="text-center">
             <%= product_import.active ? Spree.t(:say_yes) : Spree.t(:say_no) %>
           </td>
           <td class="actions text-right">
+            <a href="/admin/product_imports/<%= product_import.id%>">Show</a>
             <%= link_to_edit(product_import, no_text: true) if can? :edit, product_import %>
             <%= link_to_delete(product_import, no_text: true) if can? :delete, product_import %>
           </td>

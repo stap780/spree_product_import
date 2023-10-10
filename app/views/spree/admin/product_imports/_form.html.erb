@@ -1,78 +1,116 @@
-<div class="container">
+<div class="row">
+  <div class="col-7">
+    <div class="col-12 h2 mb-4">Edit product import</div>
+    <%= form_for [:admin, @product_import], html: { multipart: true , class: 'col-12 row'} , data: { turbo: false } do |f| %>
+      <%= render partial: 'spree/admin/shared/error_messages', locals: { target: @product_import } %>
 
-<%= form_for [:admin, @product_import], html: { multipart: true } , data: { turbo: false } do |f| %>
-<%= render partial: 'spree/admin/shared/error_messages', locals: { target: @product_import } %>
-  <fieldset>
-    <div class="row">
-      <div class="col-3 form-group checkbox">
+      <div class="col-12 form-group checkbox">
+          <%= f.text_field :title, class: "form-control" %>
+      </div>
+      <div class="col-12 form-group checkbox">
         <%= label_tag :active do %>
           <%= f.check_box :active %>
           <%= Spree.t(:active) %>
         <% end %>
       </div>
-      <div class="col-3" data-hook="admin_product_strategy">
+      <div class="col-6" data-hook="admin_product_strategy">
         <%= f.field_container :strategy do %>
           <%= f.label :strategy, Spree.t(:strategy) %>
-          <%= f.select :strategy,  [['product','Only product'],['product_variant','Product with variants'], {}, { class: "form-control" }%>
+          <%= f.select :strategy,  [['Only product','product'],['Product with variants','product_variant']], {}, { class: "form-control" }%>
         <% end %>
       </div>
-      <div class="col-3" data-hook="admin_product_uniq_field">
+      <div class="col-6" data-hook="admin_product_uniq_field">
         <%= f.field_container :uniq_field do %>
           <%= f.label :uniq_field, Spree.t(:uniq_field) %>
-          <%= f.select :uniq_field,  ['variant_id','name','sku'], {}, { class: "form-control" }%>
+          <%= f.select :uniq_field,  [['product name','product#name'],['product sku','product#sku'],['variant id','variant#id'],['variant sku','variant#sku']], {}, { class: "form-control" }%>
         <% end %>
       </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-3"><b>Columns from file</b></div>
-        <div class="col-5"><b>System fields</b></div>
-    </div>
-    <div class="row mb-4">
-        <%= f.fields_for :product_import_columns do |ff| %>
-            <div class="row col-12 mb-1">
-                <div class="col-3">
-                  <%= ff.hidden_field :column_file %>
-                  <%= label_tag "#{ff.object.column_file}", ff.object.column_file %>
-                </div>
-                <div class="col-5">
-                  <%= ff.select :column_system, grouped_options_for_select(Spree::ProductImport.import_attributes, ff.object.column_system), {include_blank: true}, { class: "form-control" }%>
-                </div>
-            </div>
-        <%end%>
-    </div>
-    <div class="row">
-      <div class="form-group form-check">
-        <%= label_tag :update_title do %>
-          <%= f.check_box :update_title %>
-          <%= Spree.t(:update_title) %>
-        <% end %>
+      <div class="col-4 mb-2"><b>Columns from file</b></div>
+      <div class="col-8 mb-2"><b>System fields</b></div>
+
+      <%= f.fields_for :product_import_columns do |ff| %>
+        <div class="col-4 mb-1">
+          <%= ff.hidden_field :column_file %>
+          <%= label_tag "#{ff.object.column_file}", ff.object.column_file %>
+        </div>
+        <div class="col-8 mb-1">
+          <%= ff.select :column_system, grouped_options_for_select(Spree::ProductImport.import_attributes, ff.object.column_system), {include_blank: true}, { class: "form-control" }%>
+        </div>
+      <%end%>
+      <div class="col-12 mt-4">
+        <div class="form-group form-check">
+          <%# label_tag :update_title do %>
+            <%# f.check_box :update_title %>
+            <%# Spree.t(:update_title) %>
+          <%# end %>
+        </div>
+        <div class="form-group form-check">
+          <%# label_tag :update_desc do %>
+            <%# f.check_box :update_desc %>
+            <%# Spree.t(:update_desc) %>
+          <%# end %>
+        </div>
+        <div class="form-group form-check">
+          <%= label_tag :update_img do %>
+            <%= f.check_box :update_img %>
+            <%= Spree.t(:update_img) %>
+          <% end %>
+        </div>
+        <div class="form-group form-check">
+          <%= label_tag :update_quantity do %>
+            <%= f.check_box :update_quantity %>
+            <%= Spree.t(:update_quantity) %>
+          <% end %>
+        </div>
+        <div class="form-group form-check">
+          <%= label_tag :update_price do %>
+            <%= f.check_box :update_price %>
+            <%= Spree.t(:update_price) %>
+          <% end %>
+        </div>
       </div>
-      <div class="form-group form-check">
-        <%= label_tag :update_desc do %>
-          <%= f.check_box :update_desc %>
-          <%= Spree.t(:update_desc) %>
-        <% end %>
+      <div class="col-12 mt-4">
+        <%= render partial: 'spree/admin/shared/edit_resource_links' %>
       </div>
-      <div class="form-group form-check">
-        <%= label_tag :update_img do %>
-          <%= f.check_box :update_img %>
-          <%= Spree.t(:update_img) %>
-        <% end %>
-      </div>
-      <div class="form-group form-check">
-        <%= label_tag :update_quantity do %>
-          <%= f.check_box :update_quantity %>
-          <%= Spree.t(:update_quantity) %>
-        <% end %>
-      </div>
-      <div class="form-group form-check">
-        <%= label_tag :update_price do %>
-          <%= f.check_box :update_price %>
-          <%= Spree.t(:update_price) %>
-        <% end %>
-      </div>
-    </div>
-    <%= render partial: 'spree/admin/shared/edit_resource_links' %>
-  </fieldset>
-<% end %>
+    <% end %>
+  </div>
+
+  <div class="col-5">
+    <div class="col-12 h4 mb-4">Short help</div>
+    <p>Before import create <a href="/admin/option_types" target="_blank">options</a> and <a href="/admin/properties" target="_blank">properties</a> that you need.</p>
+    <p>Values for options and properties will come from file</p>
+    <p>For quantity check you have minimum one <a href="/admin/stock_locations" target="_blank">stock location</a></p>
+    <p>______________________________</p>
+    <p>First import.</p>
+    <p>Product with modification:</p>
+    <ul>
+    <li>strategy - Product with variants</li>
+    <li>uniq field - product name</li>
+    </ul>
+    <p>For variant price, quantity - select field that belong to Variant group</p>
+    <p></p>
+    <p></p>
+    <p>Update product with modification:</p>
+    <ul>
+    <li>strategy - Product with variants</li>
+    <li>uniq field - variant sku/id</li>
+    </ul>
+    <p>For variant price, quantity - select field that belong to Variant group</p>
+    <p>______________________________</p>
+     <p>First import.</p>
+    <p>Product alone:</p>
+    <ul>
+    <li>strategy - Only product</li>
+    <li>uniq field - product name/sku</li>
+    </ul>
+    <p>For product price, quantity - select field that belong to Product group</p>
+    <p></p>
+    <p></p>
+    <p>Update product:</p>
+    <ul>
+    <li>strategy - Only product</li>
+    <li>uniq field - product name/sku</li>
+    </ul>
+    <p>For product price, quantity - select field that belong to Product group</p>
+  </div>
 </div>

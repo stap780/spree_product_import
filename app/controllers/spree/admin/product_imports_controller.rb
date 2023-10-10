@@ -1,6 +1,8 @@
 module Spree
   module Admin
     class ProductImportsController < ResourceController
+      include Rails.application.routes.url_helpers
+
       before_action :load_data
       before_action :set_product_import, only: %i[ index show edit update import_start destroy ]
       before_action :validate_params, only: [:update]
@@ -49,23 +51,31 @@ module Spree
         end
       end
 
-      def import_start #post
-        service = ProductImportService::Import.new(@product_import)
-        service.collect_data
-        service.import
-        respond_to do |format|
-          format.js do
-              flash.now[:notice] = "We start import process"
+      def import_start #get
+        # if @product_import.active
+          service = ProductImportService::Import.new(@product_import)
+          service.collect_data
+          service.import
+          respond_to do |format|
+            format.js do
+                flash.now[:notice] = "We start import process"
+            end
           end
-        end
+        # else
+        #   respond_to do |format|
+        #     format.js {
+        #         render  :template => "/views/spree/admin/product_imports/import_start_error.js.erb"
+        #     }
+        #   end
+        # end
       end
       
-      def convert_file_data
-          puts "start convert_file_data"
-          @data_group_uniq_field = ProductImportService::Import.convert_file_data(params)
-          @virtual_products = ProductImportService::Import.collect_virtual_incases(@data_group_uniq_field)
-          render 'convert_file_data'
-      end
+      # def convert_file_data
+      #   puts "start convert_file_data"
+      #   @data_group_uniq_field = ProductImportService::Import.convert_file_data(params)
+      #   @virtual_products = ProductImportService::Import.collect_virtual_incases(@data_group_uniq_field)
+      #   render 'convert_file_data'
+      # end
 
 
       # PATCH/PUT /products/1
@@ -119,24 +129,47 @@ module Spree
     
         # Only allow a list of trusted parameters through.
       def product_import_params
-          params.require(:product_import).permit(:active, :title, :report, :import_file,:uniq_field, :update_title, :update_desc, :update_img, :update_quantity, :update_price, product_import_columns_attributes: [:id, :product_import_id, :column_file, :column_system, :_destroy])
+          params.require(:product_import).permit(:active,:strategy, :title, :report, :import_file,:uniq_field, :update_title, :update_desc, :update_img, :update_quantity, :update_price, product_import_columns_attributes: [:id, :product_import_id, :column_file, :column_system, :_destroy])
       end
 
       def validate_params
-        # puts "###########"
+        puts "###########"
         status = []
         message = []
-        system = params[:product_import][:product_import_columns_attributes].values.map{|c| c['column_system']}.reject(&:blank?)
-        # puts system.to_s
-        status.push( system.include?('product#name') ? true : false )
-        message.push( system.include?('product#name') ? '' : 'Need product name' )
-        status.push( system.include?('product#price') ? true : false )
-        message.push( system.include?('product#price') ? '' : 'Need product price' )
-        # puts "###########"
-        # puts status.to_s
-        check_status = status.uniq == [true] ? true : false
-        # puts check_status.to_s
-        [check_status, message.join(' ')]
+        if params[:product_import][:strategy] == "product"
+          system = params[:product_import][:product_import_columns_attributes].values.map{|c| c['column_system']}.reject(&:blank?)
+          puts "system => "+system.to_s
+          status.push( system.include?('product#name') ? true : false )
+          message.push( system.include?('product#name') ? '' : 'Need product name' )
+          status.push( system.include?('product#price') ? true : false )
+          message.push( system.include?('product#price') ? '' : 'Need set price' )
+
+          # status.push( system.include?(params[:product_import][:uniq_field]) ? true : false )
+          # message.push( system.include?('product#name') ? '' : 'Need product name' )
+          puts "###########"
+          # puts status.to_s
+          check_status = status.uniq == [true] ? true : false
+          # puts check_status.to_s
+          [check_status, message.join(' ')]
+        end
+        if params[:product_import][:strategy] == "product_variant"
+          system = params[:product_import][:product_import_columns_attributes].values.map{|c| c['column_system']}.reject(&:blank?)
+          puts "system product_variant => "+system.to_s
+          status.push( system.include?('product#name') ? true : false )
+          message.push( system.include?('product#name') ? '' : 'Need product name' )
+          status.push( system.include?('variant#price') ? true : false )
+          message.push( system.include?('variant#price') ? '' : 'Need set variant price' )
+          status.push( system.include?('variant#id') || system.include?('variant#sku') ? true : false )
+          message.push( system.include?('variant#id') || system.include?('variant#sku') ? '' : 'Need set variant uniq id or sku' )
+  
+          # status.push( system.include?(params[:product_import][:uniq_field]) ? true : false )
+          # message.push( system.include?('product#name') ? '' : 'Need product name' )
+          puts "###########"
+          # puts status.to_s
+          check_status = status.uniq == [true] ? true : false
+          # puts check_status.to_s
+          [check_status, message.join(' ')]  
+        end
       end
 
     end
