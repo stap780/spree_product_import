@@ -53,21 +53,24 @@ module Spree
 
       def import_start #get
         # if @product_import.active
-          service = ProductImportService::Import.new(@product_import)
-          service.collect_data
-          service.import
+        service = ProductImportService::Import.new(@product_import)
+        service.collect_data
+        import = service.import
+        if import
           respond_to do |format|
+            format.html { redirect_to admin_product_import_path, notice: "We start import process" }
             format.js do
                 flash.now[:notice] = "We start import process"
             end
           end
-        # else
-        #   respond_to do |format|
-        #     format.js {
-        #         render  :template => "/views/spree/admin/product_imports/import_start_error.js.erb"
-        #     }
-        #   end
-        # end
+        end
+      # else
+      #   respond_to do |format|
+      #     format.js {
+      #         render  :template => "/views/spree/admin/product_imports/import_start_error.js.erb"
+      #     }
+      #   end
+      # end
       end
       
       # def convert_file_data

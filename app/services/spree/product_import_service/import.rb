@@ -103,9 +103,6 @@ module Spree
                     variant = Spree::Variant.find(line[file_uniq_column].to_i) if @product_import.uniq_field == 'variant#id'
                     variant = Spree::Variant.find_by_sku(line[file_uniq_column]) if @product_import.uniq_field == 'variant#sku'
                     product = variant.present? ? variant.product : Spree::Product.where(name: line[file_uniq_column] ).take
-                    puts "##############"
-                    puts "variant id => "+variant.id.to_s
-                    puts "##############"
                     create_update_variant(  option_type_data,
                                             variant,
                                             product,
@@ -138,7 +135,7 @@ module Spree
                 product
             else
                 product_data["shipping_category_id"] = 1
-                product_data["store_ids"] = [1]
+                product_data["store_ids"] = [Spree::Store.first.id]
                 pr_quantity = product_data['quantity']
                 new_product = Spree::Product.new(product_data.except!('quantity'))
                 new_product.set_slug
