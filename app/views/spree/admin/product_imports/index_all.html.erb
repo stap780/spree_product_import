@@ -10,6 +10,7 @@
   <table class="table">
     <thead>
       <tr data-hook="admin_product_imports_index_headers">
+        <th></th>
         <th><%= Spree.t(:title) %></th>
         <th><%= Spree.t(:report) %></th>
         <th><%= Spree.t(:file) %></th>
@@ -20,6 +21,7 @@
     <tbody>
       <% @product_imports.each do |product_import|%>
         <tr id="<%= spree_dom_id product_import %>" data-hook="admin_product_imports_index_rows">
+          <td><%= product_import.id %></td>
           <td><%= product_import.title %></td>
           <td><%= product_import.report %></td>
           <td><%= link_to 'download', file_link(product_import.import_file)  if product_import.import_file.attached? %></td>
