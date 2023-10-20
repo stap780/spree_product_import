@@ -20,7 +20,7 @@ module Spree
             
             variants = Spree::Variant.attribute_names.map{|fi| [fi,'variant#'+fi] if !not_use_variant_attr.include?(fi)}+[['price','variant#price'],['quantity','variant#quantity'],['images','variant#images']]
 
-            products = Spree::Product.attribute_names.map{|fi| [fi,'product#'+fi] if !not_use_product_attr.include?(fi)}+[['barcode','product#barcode'],['sku','product#sku'],['price','product#price'],['cat1','product#cat1'],['cat2','product#cat2'],['cat3','product#cat3'],['quantity','product#quantity'],['images','product#images']]
+            products = Spree::Product.attribute_names.map{|fi| [fi,'product#'+fi] if !not_use_product_attr.include?(fi)}+[['barcode','product#barcode'],['sku','product#sku'],['price','product#price'],['cat1','product#cat1'],['cat2','product#cat2'],['cat3','product#cat3'],['quantity','product#quantity'],['images','product#images'],['weight','product#weight'],['height','product#height'],['width','product#width'],['depth','product#depth']]
             our_fields['product'] = products.reject(&:blank?)
             our_fields['variant'] = variants.reject(&:blank?)
 
