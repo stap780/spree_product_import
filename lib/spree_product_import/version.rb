@@ -1,5 +1,5 @@
 module SpreeProductImport
-  VERSION = '0.0.29'.freeze
+  VERSION = '0.0.30'.freeze
 
   module_function
 
