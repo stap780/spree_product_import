@@ -1,6 +1,7 @@
 module Spree
     class ProductImportService::Import
         require 'open-uri'
+        require "addressable/uri"
 
         attr_accessor :product_import, :columns, :header, :file_data, :import_data
 
@@ -195,10 +196,12 @@ module Spree
         def create_image(object, images_data)
             puts 'start create_image '+Time.now.to_s
             images_data.split(' ').each do |image_url|
-                clear_url = image_url.squish if image_url.respond_to?("squish")
+                # clear_url = image_url.squish if image_url.respond_to?("squish")
+                clear_url = Addressable::URI.parse(image_url).normalize
                 # url = URI.encode(clear_url)
                 # file = URI.parse(url).open
-                filename = File.basename(URI.parse(clear_url).path)
+                # filename = File.basename(URI.parse(clear_url).path)
+                filename = File.basename(image_url)
                 file = URI.open(clear_url)
                 image = Spree::Image.create!(attachment: { io: file, filename: filename })
                 object.images << image

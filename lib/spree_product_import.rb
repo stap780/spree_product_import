@@ -6,3 +6,4 @@ require 'caxlsx'
 require 'caxlsx_rails'
 require 'roo'
 require 'roo-xls'
+require "addressable/uri"

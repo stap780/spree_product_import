@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.author    = 'You'
   s.email     = 'you@example.com'
-  s.homepage  = 'https://github.com/your-github-handle/spree_product_import'
+  s.homepage  = 'https://github.com/stap780/spree_product_import'
   s.license = 'BSD-3-Clause'
 
   s.files       = `git ls-files`.split("\n").reject { |f| f.match(/^spec/) && !f.match(/^spec\/fixtures/) }
@@ -29,6 +29,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'caxlsx_rails'
   s.add_dependency 'roo'
   s.add_dependency 'roo-xls'
+  s.add_dependency 'addressable/uri'
+
 
   s.add_development_dependency 'spree_dev_tools'  
 end
