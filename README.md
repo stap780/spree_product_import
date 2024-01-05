@@ -1,6 +1,6 @@
 # SpreeProductImport
 
-Introduction goes here.
+Check you have gem "addressable" in Gemfile
 
 ## Installation
 

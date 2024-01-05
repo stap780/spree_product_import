@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   # s.add_dependency 'caxlsx_rails'
   # s.add_dependency 'roo'
   # s.add_dependency 'roo-xls'
-  s.add_dependency('addressable/uri', '~> 2.8')
+  s.add_dependency('addressable', '~> 2.8')
 
 
   s.add_development_dependency 'spree_dev_tools'  
