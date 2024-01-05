@@ -1,34 +1,32 @@
-<div class="card">
-  <div class="card-header">
-  Product import
-  </div>
-  <div class="card-body">
-    <%= form_for [:admin, @product_import], html: { multipart: true } , data: { turbo: false } do |f| %>
-    <%= render partial: 'spree/admin/shared/error_messages', locals: { target: @product_import } %>
-    <div class="row col-6">
-        <div class="col-5 form-group checkbox">
-          <%= label_tag :active do %>
-            <%= f.check_box :active %>
-            <%= Spree.t(:active) %>
-          <% end %>
+<%= form_for [:admin, @product_import], html: { multipart: true } , data: { turbo: false } do |f| %>
+  <div class="card">
+    <div class="card-header">Product import</div>
+    <div class="card-body">
+      <%= render partial: 'spree/admin/shared/error_messages', locals: { target: @product_import } %>
+      <div class="row col-6">
+          <div class="col-5 form-group checkbox">
+            <%= label_tag :active do %>
+              <%= f.check_box :active %>
+              <%= Spree.t(:active) %>
+            <% end %>
+          </div>
+          <div class="col-12">
+              <%= f.text_field :title, value: "test import"+ Time.now.to_s, class: "form-control" %>
+          </div>
+        <div class="col-8 mt-2 mb-2">
+            <p class="mt-5"><b>Attention</b> only use  (Excel 2000/97 .xls) or csv (column separate "comma",  "utf-8")</p>
+            <%= f.file_field :import_file, accept: '.csv', class: 'import_file'%>
         </div>
-        <div class="col-12">
-            <%= f.text_field :title, value: "test import"+ Time.now.to_s, class: "form-control" %>
-        </div>
-      <div class="col-8 mt-2 mb-2">
-          <p class="mt-5"><b>Attention</b> only use  (Excel 2000/97 .xls) or csv (column separate "comma",  "utf-8")</p>
-          <%= f.file_field :import_file, accept: '.csv', class: 'import_file'%>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="form-actions" data-hook="buttons">
+        <%= button Spree.t('actions.create'), 'save.svg' %>
+        <span class="or"><%= Spree.t(:or) %></span>
+        <%= button_link_to Spree.t('actions.cancel'), collection_url, icon: 'delete.svg', id: 'cancel_link' %>
       </div>
     </div>
   </div>
-  <div class="card-footer">
-    <div class="form-actions" data-hook="buttons">
-      <%= button Spree.t('actions.create'), 'save.svg' %>
-      <span class="or"><%= Spree.t(:or) %></span>
-      <%= button_link_to Spree.t('actions.cancel'), collection_url, icon: 'delete.svg', id: 'cancel_link' %>
-    </div>
-  </div>
-  <% end %>
-</div>
+<% end %>
 
 
