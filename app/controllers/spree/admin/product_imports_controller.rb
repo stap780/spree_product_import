@@ -16,7 +16,6 @@ module Spree
           @product_imports = collection
       end
         
-      # GET /incases/new
       def new #only file import action
           @product_import = Spree::ProductImport.new
       end

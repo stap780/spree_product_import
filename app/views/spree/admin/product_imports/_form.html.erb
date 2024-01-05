@@ -37,6 +37,7 @@
           <%= ff.select :column_system, grouped_options_for_select(Spree::ProductImport.import_attributes, ff.object.column_system), {include_blank: true}, { class: "form-control" }%>
         </div>
       <%end%>
+      
       <div class="col-12 mt-4">
         <div class="form-group form-check">
           <%# label_tag :update_title do %>
