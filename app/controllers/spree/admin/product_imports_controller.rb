@@ -34,13 +34,16 @@ module Spree
         end
       end
 
+
       # POST /products
       def create
-        @product_import = ProductImport.new(product_import_params)
+        @product_import = Spree::ProductImport.new(product_import_params)
 
         respond_to do |format|
-          if @product_import.save 
-            format.html { redirect_to edit_admin_product_import_path(@product_import), notice: "product_import was successfully created." }
+          if @product_import.save
+            puts "========="
+            puts "SAVE"
+            format.html { redirect_to spree.edit_admin_product_import_path(@product_import), notice: "product_import was successfully created." }
             # format.html { redirect_to import_setup_admin_product_imports_path, notice: "product_import was successfully created." }
             format.json { render :show, status: :created, location: @product }
           else
@@ -57,7 +60,7 @@ module Spree
         import = service.import
         if import
           respond_to do |format|
-            format.html { redirect_to admin_product_import_path, notice: "We start import process" }
+            format.html { redirect_to spree.admin_product_import_path, notice: "We start import process" }
             format.js do
                 flash.now[:notice] = "We start import process"
             end
@@ -90,7 +93,7 @@ module Spree
         if success
           respond_to do |format|
             if @product_import.update(product_import_params)
-              format.html { redirect_to admin_product_import_path, notice: "product_import was successfully updated." }
+              format.html { redirect_to spree.admin_product_import_path, notice: "product_import was successfully updated." }
               format.json { render :show, status: :ok, location: @product_import }
             else
               format.html { render :edit, status: :unprocessable_entity }
