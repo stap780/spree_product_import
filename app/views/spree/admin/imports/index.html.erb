@@ -1,0 +1,48 @@
+<% content_for :page_title do %>
+  <%= Spree.t(:import) %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t(:new_import), new_object_url, class: "btn-success", icon: 'add', id: 'admin_new_import_link' %>
+<% end if can? :create, Spree::Import %>
+
+<% if @imports.any? %>
+  <table class="table">
+    <thead>
+      <tr data-hook="admin_imports_index_headers">
+        <th></th>
+        <th><%= Spree.t(:title) %></th>
+        <th><%= Spree.t(:report) %></th>
+        <th><%= Spree.t(:file) %></th>
+        <th class="text-center"><%= Spree.t(:active) %></th>
+        <th class="actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @imports.each do |import|%>
+        <tr id="<%= spree_dom_id import %>" data-hook="admin_imports_index_rows">
+          <td><%= import.id %></td>
+          <td><%= import.title %></td>
+          <td><%= import.report %></td>
+          <td><%= link_to 'download', file_link(import.import_file)  if import.import_file.attached? %></td>
+          <td class="text-center">
+            <%= import.active ? Spree.t(:say_yes) : Spree.t(:say_no) %>
+          </td>
+          <td class="actions text-right">
+            <a href="/admin/imports/<%= import.id%>">Show</a>
+            <%= link_to_edit(import, no_text: true) if can? :edit, import %>
+            <%= link_to_delete(import, no_text: true) if can? :delete, import %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class="alert alert-info">
+    <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::ProductImport)) %>,
+    <%= link_to(Spree.t(:add_one), new_object_url) if can? :create, Spree::ProductImport %>!
+  </div>
+<% end %>
+
+<%# don't understand why not work%>
+<%# render partial: 'spree/admin/shared/index_table_options', locals: { collection: @imports , simple: true } %>

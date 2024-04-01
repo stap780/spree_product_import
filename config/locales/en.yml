@@ -2,4 +2,4 @@ en:
   hello: "Hello world"
   spree:
     ProductImports: 'Product Imports'
-    AllImports: 'All Imports'
+    All: 'All'

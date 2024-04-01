@@ -1,9 +1,9 @@
 module Spree
-    class ProductImport < Spree::Base
+    class Import < Spree::Base
         has_one_attached :import_file, dependent: :destroy
         scope :active, -> { where(active: true) }
-        has_many :product_import_columns, dependent: :destroy
-        accepts_nested_attributes_for :product_import_columns, allow_destroy: true
+        has_many :import_columns, dependent: :destroy
+        accepts_nested_attributes_for :import_columns, allow_destroy: true
 
         validate :import_file_size
     
@@ -50,6 +50,9 @@ module Spree
             end
         end
 
+        def self.ransackable_attributes(auth_object = nil)
+          [:active,:strategy, :title, :report, :import_file,:uniq_field, :update_title, :update_desc, :update_img, :update_quantity, :update_price]
+        end
 
     end
 end

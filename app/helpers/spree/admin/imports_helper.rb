@@ -1,6 +1,6 @@
 module Spree
     module Admin
-        module ProductImportsHelper
+        module ImportsHelper
 
             def get_selected_value(of)
                 selected_value = 'Название товара или услуги' if of == 'name'

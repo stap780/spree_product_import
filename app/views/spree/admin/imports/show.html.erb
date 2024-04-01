@@ -2,23 +2,23 @@
 <div class="row">
     <div class="col-12">
         <span class="h5">Title</span>
-        <span><%= @product_import.title %></span>
+        <span><%= @import.title %></span>
     </div>
     <div class="col-12">
         <span class="h5">File</span>
-        <span><%= link_to 'download', file_link(@product_import.import_file)  if @product_import.import_file.attached? %></span>
+        <span><%= link_to 'download', file_link(@import.import_file)  if @import.import_file.attached? %></span>
     </div>
     <div class="col-12">
         <span class="h5">Strategy</span>
-        <span><%= @product_import.strategy%></span>
+        <span><%= @import.strategy%></span>
     </div>
 </div>
 <div class="d-flex form-actions align-items-center " data-hook="buttons">
-    <%= link_to_edit(@product_import, no_text: true) if can? :edit, @product_import %>
-    <%= form_for [:admin, @product_import], url: spree.import_start_admin_product_imports_path, html: { multipart: true }, method: :get , data: { turbo: false, remote: true } do |f| %>
+    <%= link_to_edit(@import, no_text: true) if can? :edit, @import %>
+    <%= form_for [:admin, @import], url: spree.start_admin_import_path, html: { multipart: true }, method: :get , data: { turbo: false, remote: true } do |f| %>
         <%= button Spree.t('actions.start'), 'save.svg', 'submit', {class: 'btn-success', id: "import_start_button", data: { disable_with: "#{ Spree.t(:starting) }..." }} %>
     <% end %>
-    <%# link_to "Start import",import_start_admin_product_imports_path(@product_import) , class: "btn btn-success", id: "import_start_button", remote: true %>
+    <%# link_to "Start import",import_start_admin_imports_path(@import) , class: "btn btn-success", id: "import_start_button", remote: true %>
     <span class="or"><%= Spree.t(:or) %></span>
     <%= button_link_to Spree.t('actions.cancel'), collection_url, icon: 'cancel.svg' %>
 </div>

@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-7">
     <div class="col-12 h2 mb-4">Edit product import</div>
-    <%= form_for [:admin, @product_import], url: spree.admin_product_import_path(@product_import), html: { multipart: true , class: 'col-12 row'} , data: { turbo: false } do |f| %>
-      <%= render partial: 'spree/admin/shared/error_messages', locals: { target: @product_import } %>
+    <%= form_for [:admin, @import], url: spree.admin_import_path(@import), html: { multipart: true , class: 'col-12 row'} , data: { turbo: false } do |f| %>
+      <%= render partial: 'spree/admin/shared/error_messages', locals: { target: @import } %>
 
       <div class="col-12 form-group checkbox">
           <%= f.text_field :title, class: "form-control" %>
@@ -28,13 +28,13 @@
       <div class="col-4 mb-2"><b>Columns from file</b></div>
       <div class="col-8 mb-2"><b>System fields</b></div>
 
-      <%= f.fields_for :product_import_columns do |ff| %>
+      <%= f.fields_for :import_columns do |ff| %>
         <div class="col-4 mb-1">
           <%= ff.hidden_field :column_file %>
           <%= label_tag "#{ff.object.column_file}", ff.object.column_file %>
         </div>
         <div class="col-8 mb-1">
-          <%= ff.select :column_system, grouped_options_for_select(Spree::ProductImport.import_attributes, ff.object.column_system), {include_blank: true}, { class: "form-control" }%>
+          <%= ff.select :column_system, grouped_options_for_select(Spree::Import.import_attributes, ff.object.column_system), {include_blank: true}, { class: "form-control" }%>
         </div>
       <%end%>
       
@@ -77,13 +77,13 @@
   </div>
 
   <div class="col-5">
-    <div class="col-12 h4 mb-4">Short help</div>
-    <p>Before import create <a href="/admin/option_types" target="_blank">options</a> and <a href="/admin/properties" target="_blank">properties</a> that you need.</p>
+    <div class="col-12 h4 mb-4 px-0">Short help</div>
+    <p>Before import please create <a href="/admin/option_types" target="_blank">options</a> and <a href="/admin/properties" target="_blank">properties</a> that you need.</p>
     <p>Values for options and properties will come from file</p>
-    <p>For quantity check you have minimum one <a href="/admin/stock_locations" target="_blank">stock location</a></p>
+    <p>For quantity please check you have minimum one <a href="/admin/stock_locations" target="_blank">stock location</a></p>
     <p>______________________________</p>
-    <p>First import.</p>
-    <p>Product with modification:</p>
+    <div class="col-12 h5 mb-2 px-0">Product with modification</div>
+    <p>First import:</p>
     <ul>
     <li>strategy - Product with variants</li>
     <li>uniq field - product name</li>
@@ -98,8 +98,8 @@
     </ul>
     <p>For variant price, quantity - select field that belong to Variant group</p>
     <p>______________________________</p>
-     <p>First import.</p>
-    <p>Product alone:</p>
+    <div class="col-12 h5 mb-2 px-0">Product alone</div>
+     <p>First import:</p>
     <ul>
     <li>strategy - Only product</li>
     <li>uniq field - product name/sku</li>

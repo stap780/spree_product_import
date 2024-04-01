@@ -1,21 +1,21 @@
 module Spree
-    class ProductImportService::Import
+    class ImportService::Import
         require 'open-uri'
         require "addressable/uri"
 
-        attr_accessor :product_import, :columns, :header, :file_data, :import_data
+        attr_accessor :import, :columns, :header, :file_data, :import_data
 
-        def initialize(product_import)
+        def initialize(import)
             puts "ProductImportService::Import initialize"
-            @product_import = product_import
-            @columns = @product_import.product_import_columns
-            # file = Rails.application.routes.url_helpers.url_for(product_import.import_file)
-            # file = ActiveStorage::Blob.service.path_for(product_import.import_file.key)
-            file = ActiveStorage::Blob.service.send(:path_for, product_import.import_file.key)
-            # original_filename = product_import.import_file.blob
-            @content_type =  product_import.import_file.blob.content_type
+            @import = import
+            @columns = @import.import_columns
+            # file = Rails.application.routes.url_helpers.url_for(import.import_file)
+            # file = ActiveStorage::Blob.service.path_for(import.import_file.key)
+            file = ActiveStorage::Blob.service.send(:path_for, import.import_file.key)
+            # original_filename = import.import_file.blob
+            @content_type =  import.import_file.blob.content_type
             # @file = File.new(file)
-            @file = ActiveStorage::Blob.service.send(:path_for, product_import.import_file.key)
+            @file = ActiveStorage::Blob.service.send(:path_for, import.import_file.key)
             @header
             @file_data = []
             @import_data
@@ -42,7 +42,7 @@ module Spree
         end
 
         def import
-            file_uniq_column = @columns.where(column_system: @product_import.uniq_field)[0].column_file
+            file_uniq_column = @columns.where(column_system: @import.uniq_field)[0].column_file
             system_columns = @columns.where.not(column_system: [nil,''])
 
             product_columns = system_columns.select{|c| c.column_system.include?('product')}
@@ -83,26 +83,26 @@ module Spree
                 end
 
                 puts "##########"
-                puts "@product_import.uniq_field => "+@product_import.uniq_field.to_s
+                puts "@import.uniq_field => "+@import.uniq_field.to_s
                 puts "line[file_uniq_column] => "+line[file_uniq_column].to_s
                 puts "file_uniq_column => "+file_uniq_column.to_s
                 puts "##########"
 
-                if @product_import.strategy == 'product'
-                    product = Spree::Product.where("#{@product_import.uniq_field.remove('product#')}" => line[file_uniq_column] )
+                if @import.strategy == 'product'
+                    product = Spree::Product.where("#{@import.uniq_field.remove('product#')}" => line[file_uniq_column] )
                     create_update_product(  product.take, 
                                             product_data,
                                             properties_data,
                                             taxon_data,
                                             images_data )
                 end
-                if @product_import.strategy == 'product_variant'
+                if @import.strategy == 'product_variant'
                     puts "##############"
                     puts "strategy = product_variant"
                     puts "##############"
                     variant = nil
-                    variant = Spree::Variant.find(line[file_uniq_column].to_i) if @product_import.uniq_field == 'variant#id'
-                    variant = Spree::Variant.find_by_sku(line[file_uniq_column]) if @product_import.uniq_field == 'variant#sku'
+                    variant = Spree::Variant.find(line[file_uniq_column].to_i) if @import.uniq_field == 'variant#id'
+                    variant = Spree::Variant.find_by_sku(line[file_uniq_column]) if @import.uniq_field == 'variant#sku'
                     product = variant.present? ? variant.product : Spree::Product.where(name: line[file_uniq_column] ).take
                     create_update_variant(  option_type_data,
                                             variant,
@@ -121,8 +121,8 @@ module Spree
                 pr_quantity = product_data['quantity']
                 pr_price = product_data['price']
                 product.update(product_data.except!('quantity').except!('price'))
-                product.update(price: pr_price) if @product_import.update_price && pr_price.present?
-                if @product_import.update_quantity && pr_quantity.present?
+                product.update(price: pr_price) if @import.update_price && pr_price.present?
+                if @import.update_quantity && pr_quantity.present?
                     if product.stock_items.present?
                         product.stock_items.first.update(count_on_hand: pr_quantity)
                     else
@@ -132,7 +132,7 @@ module Spree
                 create_product_property(product, properties_data) if properties_data.present?
                 create_taxon(taxon_data) if taxon_data.present?
                 product_to_taxon(product, taxon_data) if taxon_data.present?
-                create_image(product, images_data.join()) if @product_import.update_img && images_data.present?
+                create_image(product, images_data.join()) if @import.update_img && images_data.present?
                 product
             else
                 product_data["shipping_category_id"] = 1
@@ -141,7 +141,7 @@ module Spree
                 new_product = Spree::Product.new(product_data.except!('quantity'))
                 new_product.set_slug
                 new_product.save
-                if @product_import.update_quantity && pr_quantity.present?
+                if @import.update_quantity && pr_quantity.present?
                     if new_product.stock_items.present?
                         new_product.stock_items.first.update(count_on_hand: pr_quantity)
                     else
@@ -151,7 +151,7 @@ module Spree
                 create_product_property(new_product, properties_data) if properties_data.present?
                 create_taxon(taxon_data) if taxon_data.present?
                 product_to_taxon(new_product, taxon_data) if taxon_data.present?
-                create_image(new_product, images_data.join()) if @product_import.update_img && images_data.present?
+                create_image(new_product, images_data.join()) if @import.update_img && images_data.present?
                 new_product
             end
         end
@@ -162,8 +162,8 @@ module Spree
                 var_quantity = variant_data['quantity']
                 create_update_product(product,product_data,properties_data,taxon_data,nil)
                 variant.update(variant_data.except!('quantity')) if variant_data.present?
-                variant.update(price: variant_data['price']) if @product_import.update_price && variant_data['price'].present?
-                if @product_import.update_quantity && var_quantity.present?
+                variant.update(price: variant_data['price']) if @import.update_price && variant_data['price'].present?
+                if @import.update_quantity && var_quantity.present?
                     if variant.stock_items.present?
                         variant.stock_items.first.update(count_on_hand: var_quantity)
                     else
@@ -172,7 +172,7 @@ module Spree
                 end
                 option_value_ids = collect_option_value_ids(option_type_data) if option_type_data.present?
                 variant.update(option_value_ids: option_value_ids) if option_type_data.present?
-                create_image(variant, variant_images_data.join()) if @product_import.update_img && variant_images_data.present?
+                create_image(variant, variant_images_data.join()) if @import.update_img && variant_images_data.present?
             else
                 get_product = product.present? ? product : create_update_product(product,product_data.merge!({"price" => variant_data["price"]}),properties_data,taxon_data,nil)
                 option_value_ids = option_type_data.present? ? collect_option_value_ids(option_type_data) : []
@@ -181,14 +181,14 @@ module Spree
                 sku = variant_data['sku'] || ''
                 new_variant = get_product.variants.new(option_value_ids: option_value_ids, price: price, sku: sku)
                 new_variant.save
-                if @product_import.update_quantity && variant_data['quantity'].present?
+                if @import.update_quantity && variant_data['quantity'].present?
                     if new_variant.stock_items.present?
                         new_variant.stock_items.first.update(count_on_hand: variant_data['quantity'])
                     else
                         new_variant.stock_items.create(count_on_hand: variant_data['quantity'], stock_location_id: Spree::StockLocation.first.id)
                     end
                 end
-                create_image(new_variant, variant_images_data.join()) if @product_import.update_img && variant_images_data.present?
+                create_image(new_variant, variant_images_data.join()) if @import.update_img && variant_images_data.present?
             end
 		    puts 'finish create_update_variant '+Time.now.to_s
         end
@@ -292,6 +292,6 @@ module Spree
 end
 
 
-# CSV.parse(product_import.import_file.download, headers: true, col_sep: ',', encoding: "UTF-8") do |row|
+# CSV.parse(import.import_file.download, headers: true, col_sep: ',', encoding: "UTF-8") do |row|
 #  puts row
 # end

@@ -1,3 +1,4 @@
+
 if Gem.loaded_specs['spree_core'].version >= Gem::Version.create('3.5.0')
     Deface::Override.new(
       # virtual_path: 'spree/admin/shared/sub_menu/_configuration',
@@ -7,7 +8,7 @@ if Gem.loaded_specs['spree_core'].version >= Gem::Version.create('3.5.0')
       insert_bottom: '[data-hook="admin_product_sub_tabs"]',
       :original => 'a4305c20d4339476f54a5bc02426ce053563bc6e',
       text:     <<-HTML
-      <%= configurations_sidebar_menu_item Spree.t('product_imports'), admin_product_imports_path if can? :admin, Spree::Config %>
+      <%= configurations_sidebar_menu_item Spree.t('imports'), admin_imports_path if can? :admin, Spree::Config %>
      HTML
     )
   end
