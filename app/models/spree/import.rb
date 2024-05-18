@@ -1,11 +1,14 @@
 module Spree
     class Import < Spree::Base
-        has_one_attached :import_file, dependent: :destroy
+        has_one_attached :import_file
         scope :active, -> { where(active: true) }
         has_many :import_columns, dependent: :destroy
         accepts_nested_attributes_for :import_columns, allow_destroy: true
 
         validate :import_file_size
+
+        OPTION_TYPE_ARRAY = Spree::OptionType.count > 0 ? Spree::OptionType.all.map{|ot| [ot.presentation, 'option_type#'+ot.presentation] if ot.presentation.present? } : []
+        PROPERTY_ARRAY = Spree::Property.count > 0 ? Spree::Property.all.map{|ot| [ot.presentation, 'property#'+ot.presentation] if ot.presentation.present? } : []
     
         def self.import_attributes
             our_fields = Hash.new
@@ -24,10 +27,10 @@ module Spree
             our_fields['product'] = products.reject(&:blank?)
             our_fields['variant'] = variants.reject(&:blank?)
 
-            option_types = Spree::OptionType.count > 0 ? Spree::OptionType.all.map{|ot| [ot.presentation, 'option_type#'+ot.presentation] if ot.presentation.present? } : []
+            option_types = Spree::Import::OPTION_TYPE_ARRAY
             our_fields['option_types'] = option_types.reject(&:blank?)
 
-            properties = Spree::Property.count > 0 ? Spree::Property.all.map{|ot| [ot.presentation, 'property#'+ot.presentation] if ot.presentation.present? } : []
+            properties = Spree::Import::PROPERTY_ARRAY
             our_fields['properties'] = properties.reject(&:blank?)
             
             # collections = Spree::Taxonomy.attribute_names.map{|fi| [fi,'taxonomy#'+fi]  if !not_use_variant_attr.include?(fi)}
@@ -51,7 +54,8 @@ module Spree
         end
 
         def self.ransackable_attributes(auth_object = nil)
-          [:active,:strategy, :title, :report, :import_file,:uniq_field, :update_title, :update_desc, :update_img, :update_quantity, :update_price]
+          Spree::Import.attribute_names
+          #[:active,:strategy, :title, :report, :import_file,:uniq_field, :update_title, :update_desc, :update_img, :update_quantity, :update_price]
         end
 
     end

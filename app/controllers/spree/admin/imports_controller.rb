@@ -11,8 +11,8 @@ module Spree
         params[:q] ||= {}
         @q = Spree::Import.ransack(params[:q])
         @q.sorts = "id desc" if @q.sorts.empty?
-        @imports = @q.result #.page(params[:page] || 1).per(5)
-        # @imports = Spree::Import.all.page(params[:page] || 1).per(25)
+        @imports = @q.result.page(params[:page]).per(params[:per_page])
+        # @imports = Spree::Import.all.page(params[:page] || 1).per(10)
       end
  
       #only file import action
@@ -147,6 +147,7 @@ module Spree
         check_status = status.uniq.to_s == "[true]" ? true : false
         [check_status, message.join(' ')]
       end
+
 
     end
   end
